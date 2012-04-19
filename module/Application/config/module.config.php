@@ -3,6 +3,13 @@ return array(
     'di' => array(
         'instance' => array(
 
+            //Setup aliases
+
+            //Alias for every controller prefixed by lowercase namespace
+            'alias' => array(
+                'application_index'         => 'Application\Controller\IndexController'
+            ),
+
             // Setup for controllers.
 
             // Injecting the plugin broker for controller plugins into
@@ -26,12 +33,16 @@ return array(
                         'default' => array(
                             'type'    => 'Zend\Mvc\Router\Http\Segment',
                             'options' => array(
-                                'route'    => '/[:controller[/:action]]',
+                                'route'    => '/[:controller[/:action[/:param[/:param2[/:param3]]]]]',
                                 'constraints' => array(
                                     'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                     'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    'param'      => '[a-zA-Z0-9_-]*',
+                                    'param2'     => '[a-zA-Z0-9_-]*',
+                                    'param3'     => '[a-zA-Z0-9_-]*',
                                 ),
                                 'defaults' => array(
+                                    'namespace'  => 'application',
                                     'controller' => 'Application\Controller\IndexController',
                                     'action'     => 'index',
                                 ),
@@ -42,7 +53,8 @@ return array(
                             'options' => array(
                                 'route'    => '/',
                                 'defaults' => array(
-                                    'controller' => 'Application\Controller\IndexController',
+                                    'namespace'  => 'application',
+                                    'controller' => 'index',
                                     'action'     => 'index',
                                 ),
                             ),
@@ -69,11 +81,11 @@ return array(
                     'Zend\View\Resolver\TemplatePathStack',
                 ),
             ),
-            // Defining where the layout/layout view should be located
+            // Defining where the application layout/layout view should be located
             'Zend\View\Resolver\TemplateMapResolver' => array(
                 'parameters' => array(
                     'map'  => array(
-                        'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+                        //'application/layout/layout' => __DIR__ . '/../view/application/layout/layout.phtml',
                     ),
                 ),
             ),
@@ -89,7 +101,7 @@ return array(
             // View for the layout
             'Zend\Mvc\View\DefaultRenderingStrategy' => array(
                 'parameters' => array(
-                    'layoutTemplate' => 'layout/layout',
+                    'layoutTemplate' => 'application/layout/layout',
                 ),
             ),
             // Injecting the router into the url helper
@@ -109,14 +121,14 @@ return array(
                 'parameters' => array(
                     'displayNotFoundReason' => true,
                     'displayExceptions'     => true,
-                    'notFoundTemplate'      => 'error/404',
+                    'notFoundTemplate'      => 'application/error/404',
                 ),
             ),
             // View script rendered in case of other exceptions
             'Zend\Mvc\View\ExceptionStrategy' => array(
                 'parameters' => array(
                     'displayExceptions' => true,
-                    'exceptionTemplate' => 'error/index',
+                    'exceptionTemplate' => 'application/error/index',
                 ),
             ),
         ),
